@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 type Particle = {
@@ -59,18 +60,18 @@ const Home = () => {
           inventory—all in one place.
         </p>
         <div className="space-x-4">
-          <a
+          <Link
             href="/dashboard"
             className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg hover:scale-105 hover:bg-orange-600 transition transform"
           >
             Go to Dashboard
-          </a>
-          <a
+          </Link>
+          <Link
             href="/inventory"
             className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg shadow-lg hover:scale-105 hover:bg-gray-300 transition transform"
           >
             Manage Inventory
-          </a>
+          </Link>
         </div>
       </header>
 

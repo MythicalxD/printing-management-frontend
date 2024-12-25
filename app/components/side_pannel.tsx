@@ -1,4 +1,5 @@
 // SidePanel.tsx
+import Link from 'next/link';
 import React from 'react';
 import { AiOutlineDashboard, AiOutlineHistory } from 'react-icons/ai';
 import { MdOutlineInventory2 } from 'react-icons/md';
@@ -12,15 +13,15 @@ const SidePanel = () => {
           <ul className="space-y-4">
             <li className="flex items-center gap-4 p-2 hover:bg-gray-300 rounded-md bg-gray-200 text-black">
               <AiOutlineDashboard size={24} />
-              <a href="/dashboard">Dashboard</a>
+              <Link href="/dashboard">Dashboard</Link>
             </li>
             <li className="flex items-center gap-4 p-2 hover:bg-gray-300 rounded-md bg-gray-200 text-black">
               <MdOutlineInventory2 size={24} />
-              <a href="/inventory">Inventory</a>
+              <Link href="/inventory">Inventory</Link>
             </li>
             <li className="flex items-center gap-4 p-2 hover:bg-gray-300 rounded-md bg-gray-200 text-black">
               <AiOutlineHistory size={24} />
-              <a href="/history">History</a>
+              <Link href="/history">History</Link>
             </li>
           </ul>
         </nav>

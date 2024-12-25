@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import TopBar from "@/app/components/top_bar";
 import SidePanel from "@/app/components/side_pannel";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import OverviewPanel from "@/app/components/overview";
 import axios from "axios";
-import { ApiResponse, Task } from "@/types/type"; // Assuming Task is defined in your types
+import { Task } from "@/types/type"; // Assuming Task is defined in your types
 
 async function getData(token: string): Promise<Task[]> {
   const dataToSend = {
@@ -17,19 +16,12 @@ async function getData(token: string): Promise<Task[]> {
 
   const apiUrl = "/api/fetchTasks";
 
-  try {
-      const response = await axios.post(apiUrl, dataToSend);
-      console.log(response.data.data.data);
-      return response.data.data.data;
-  } catch (error: any) {
-      //window.location.href = "/auth";
-      console.error();
-      return error;
-  }
+  const response = await axios.post(apiUrl, dataToSend);
+  console.log(response.data.data.data);
+  return response.data.data.data;
 }
 
 const JobList: React.FC = () => {
-  const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
