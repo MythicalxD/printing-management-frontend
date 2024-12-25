@@ -7,6 +7,7 @@ export interface Task {
   title: string;
   client: string;
   due_date: string;
+  description: string;
   priority: "High" | "Medium" | "Low"; // Priority is restricted to specific values
   documents: Document[]; // An array of document strings
 }

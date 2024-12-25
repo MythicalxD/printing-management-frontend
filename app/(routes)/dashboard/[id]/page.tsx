@@ -1,30 +1,62 @@
 "use client";
 
-import React from "react";
-import { useRouter, useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import TopBar from "@/app/components/top_bar";
 import SidePanel from "@/app/components/side_pannel";
 import { Progress } from "@/app/components/progress_bar";
+import axios from "axios";
+import { Task } from "@/types/type";
+
+async function getData(token: string, id: number): Promise<Task> {
+  const dataToSend = {
+      id: token
+  };
+
+  const apiUrl = "/api/fetchTasks";
+
+   const response = await axios.post(apiUrl, dataToSend);
+      console.log(response.data.data.data[id]);
+      return response.data.data.data[id];
+}
 
 const JobDetails: React.FC = () => {
   const params = useParams();
   const router = useRouter();
 
-  // Simulate job data for now
-  const jobData = {
-    id: params?.id || "1",
-    title: "Brochure Printing",
-    client: "ABC Corp",
-    status: "In Progress",
-    progress: 65, // Example progress percentage
-    dueDate: "2024-01-10",
-    priority: "High",
-    description: "Print 1000 brochures with full-color design.",
-    tips: "Ensure to use high-quality images for better results.",
-    attachments: [
-      { name: "Design File", link: "/files/design.pdf" },
-      { name: "Specification Document", link: "/files/specs.pdf" },
-    ],
+  const [tasks, setTasks] = useState<Task>();
+  
+    useEffect(() => {
+      const fetchData = async () => {
+          const authToken = document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("token="))
+              ?.split("=")[1];
+  
+          const fetchedData = await getData(authToken!, Number(params.id));
+          setTasks(fetchedData);
+      };
+  
+      fetchData(); // Call the fetchData function when the component mounts
+  
+      // Optionally, you can include a cleanup function here if needed
+  }, []); // The empty dependency array ensures that the effect runs only once
+ 
+  if (!tasks) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // Function to adjust the attachment URL
+  const getAttachmentUrl = (relativePath: string) => {
+    const basePath = "./uploads/";
+    const serverPath = "http://192.168.1.12/printing/uploads/";
+    return relativePath.startsWith(basePath)
+      ? relativePath.replace(basePath, serverPath)
+      : relativePath;
   };
 
   return (
@@ -35,39 +67,45 @@ const JobDetails: React.FC = () => {
         <div className="p-6">
           <div className="bg-white shadow-md rounded-md p-6">
             <h1 className="text-4xl font-bold mb-6 flex items-center gap-4">
-              {jobData.title}
+              {tasks.title}
               <span className="bg-green-200 text-green-700 text-sm font-semibold px-3 py-1 rounded-md">
-                {jobData.status}
+                {"PENDING"}
               </span>
             </h1>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <p className="text-lg mb-4"><strong>Client:</strong> {jobData.client}</p>
-                <p className="text-lg mb-4"><strong>Due Date:</strong> {jobData.dueDate}</p>
-                <p className="text-lg mb-4"><strong>Priority:</strong> {jobData.priority}</p>
+                <p className="text-lg mb-4">
+                  <strong>Client:</strong> {tasks.client}
+                </p>
+                <p className="text-lg mb-4">
+                  <strong>Due Date:</strong> {tasks.due_date}
+                </p>
+                <p className="text-lg mb-4">
+                  <strong>Priority:</strong> {tasks.priority}
+                </p>
               </div>
               <div>
-                <p className="text-lg mb-4"><strong>Description:</strong> {jobData.description}</p>
-                <p className="text-lg mb-4 text-gray-600 italic"><strong>Tips:</strong> {jobData.tips}</p>
+                <p className="text-lg mb-4">
+                  <strong>Description:</strong> {tasks.description}
+                </p>
+                <p className="text-lg mb-4 text-gray-600 italic">
+                  <strong>Tips:</strong> {"None"}
+                </p>
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">Progress</h2>
-            <Progress value={jobData.progress} max={100} />
-            <p className="text-sm text-gray-500 mt-2">{jobData.progress}% Completed</p>
-
             <h2 className="text-2xl font-bold mt-8 mb-4">Attachments</h2>
             <ul className="list-disc pl-6">
-              {jobData.attachments.map((attachment, index) => (
+              {tasks.documents && tasks.documents.map((attachment: any, index: number) => (
                 <li key={index}>
                   <a
-                    href={attachment.link}
+                    href={getAttachmentUrl(attachment)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 hover:underline"
                   >
-                    {attachment.name}
+                    {attachment.split("/").pop()} {/* Extract file name */}
                   </a>
                 </li>
               ))}

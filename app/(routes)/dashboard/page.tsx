@@ -16,9 +16,9 @@ async function getData(token: string): Promise<Task[]> {
 
   const apiUrl = "/api/fetchTasks";
 
-  const response = await axios.post(apiUrl, dataToSend);
-  console.log(response.data.data.data);
-  return response.data.data.data;
+   const response = await axios.post(apiUrl, dataToSend);
+      console.log(response.data.data.data);
+      return response.data.data.data;
 }
 
 const JobList: React.FC = () => {
@@ -61,12 +61,12 @@ const JobList: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tasks.map((job) => (
-                  <TableRow key={job.id}>
-                    <TableCell>{job.id}</TableCell>
+                {tasks.map((job, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{index}</TableCell>
                     <TableCell>
                       <a
-                        href={`/dashboard/${job.id}`}
+                        href={`/dashboard/${index}`}
                         className="text-blue-500 hover:underline"
                       >
                         {job.title}
