@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import TopBar from "@/app/components/top_bar";
 import SidePanel from "@/app/components/side_pannel";
-import { Progress } from "@/app/components/progress_bar";
 import axios from "axios";
 import { Task } from "@/types/type";
 
@@ -97,7 +96,7 @@ const JobDetails: React.FC = () => {
 
             <h2 className="text-2xl font-bold mt-8 mb-4">Attachments</h2>
             <ul className="list-disc pl-6">
-              {tasks.documents && tasks.documents.map((attachment: any, index: number) => (
+              {tasks.documents && tasks.documents.map((attachment: string, index: number) => (
                 <li key={index}>
                   <a
                     href={getAttachmentUrl(attachment)}
